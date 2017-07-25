@@ -16,6 +16,7 @@ public class MineShaft : MonoBehaviour {
         {
             myWorkers[i].myConsumptionRepo = myConsumptionRepo;
             myWorkers[i].myProductionRepo = myProductionRepo;
+            myWorkers[i].myModel = myModel as IMinerModel;
         }
     }
 	

@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressionModelMineShaft : ScriptableObject {
-
+public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
+{
     public int currentLevel = 1;
     public int maxLevel = 100;
 
@@ -13,7 +14,7 @@ public class ProgressionModelMineShaft : ScriptableObject {
     public double currentUnitsMinedPerCycle = 10d;
 
     public double baseUnitsUploadedPerCycle = 50d;
-    public double currnetUnitsUploadedPerCycle = 50d;
+    public double currentUnitsUploadedPerCycle = 50d;
 
     public float baseConsumptionCycleTime = 1f;
     public float baseProductionCycleTime = 1f;
@@ -46,8 +47,17 @@ public class ProgressionModelMineShaft : ScriptableObject {
         currentLevel = newLevel;
         currentUnitsMinedPerCycle = GetUnitsMinedPerCycleAtLevel(newLevel);
         currentProductionRepoMaxCapacity = GetProductionRepoCapacityAtLevel(newLevel);
-        currnetUnitsUploadedPerCycle = GetUnitsUploadedPerCycleAtLevel(newLevel);
+        currentUnitsUploadedPerCycle = GetUnitsUploadedPerCycleAtLevel(newLevel);
         currentNumberOfWorkers = GetNumberOfWorkersAtLevel(newLevel);
     }
 
+    public double GetUnitsMinedPerSecond()
+    {
+        return currentUnitsMinedPerCycle;
+    }
+
+    public double GetUnitsUploadedPerSecond()
+    {
+        return currentUnitsUploadedPerCycle;
+    }
 }

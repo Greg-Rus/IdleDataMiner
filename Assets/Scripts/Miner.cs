@@ -8,7 +8,7 @@ public class Miner : MonoBehaviour {
     public Repo myConsumptionRepo;
     public Repo myProductionRepo;
     public Repo myRepo;
-    public ProgressionModelMineShaft myModel;
+    public IMinerModel myModel;
 
     //public Transform consumptionTarget;
     //public Transform productionTarget;
@@ -17,8 +17,8 @@ public class Miner : MonoBehaviour {
     public float minWidth = 0.2f;
     public float maxWidth = 0.5f;
 
-    public double unitsMinedPerSecond = 10d;
-    public double unitsUploadedPerSecond = 50d;
+    //public double unitsMinedPerSecond = 10d;
+    //public double unitsUploadedPerSecond = 50d;
     public float consumptionTime = 1f;
     public float productionTime = 1f;
     public MinerState state;
@@ -50,7 +50,7 @@ public class Miner : MonoBehaviour {
     {
         state = MinerState.Consuming;
         timer = consumptionTime;
-        double unitsWithdrawn = myConsumptionRepo.Withdraw(unitsMinedPerSecond);
+        double unitsWithdrawn = myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
         SetupLineRenderer(myConsumptionRepo.transform, Color.green);
     }
@@ -85,7 +85,7 @@ public class Miner : MonoBehaviour {
     {
         state = MinerState.Producing;
         timer = productionTime;
-        double unitsWithdrawn = myRepo.Withdraw(unitsUploadedPerSecond);
+        double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
         double unitsDeposited = myProductionRepo.Deposit(unitsWithdrawn);
         SetupLineRenderer(myProductionRepo.transform, Color.red);
     }
