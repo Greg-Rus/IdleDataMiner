@@ -87,12 +87,14 @@
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CloudController.cs" />
     <Compile Include="Assets\Scripts\DataConectionController.cs" />
+    <Compile Include="Assets\Scripts\FSM.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
     <Compile Include="Assets\Scripts\Miner.cs" />
     <Compile Include="Assets\Scripts\MineShaft.cs" />
     <Compile Include="Assets\Scripts\MineShaftModel.cs" />
     <Compile Include="Assets\Scripts\MineShaftView.cs" />
     <Compile Include="Assets\Scripts\PipelineController.cs" />
+    <Compile Include="Assets\Scripts\ProgressionModelCloud.cs" />
     <Compile Include="Assets\Scripts\ProgressionModelMineShaft.cs" />
     <Compile Include="Assets\Scripts\Repo.cs" />
     <Compile Include="Assets\Scripts\UpgradeMenuHandler.cs" />

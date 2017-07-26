@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 57aaacd7bd0906c40aa2fb4124388bc3
-timeCreated: 1500999544
+timeCreated: 1501090250
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,7 @@ TextureImporter:
     21300002: ShaftModule
     21300004: Repo
     21300006: Miner
+    21300008: Manager
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -146,6 +147,20 @@ TextureImporter:
         height: 151
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Manager
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 257
+        width: 98
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

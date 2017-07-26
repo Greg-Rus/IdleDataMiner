@@ -27,13 +27,32 @@ public class Miner : MonoBehaviour {
     public WorkerState state;
 
     private float timer = 0f;
-	// Use this for initialization
+    // Use this for initialization
+
+    FSM<WorkerState> myFSM;
 	void Start ()
     {
         state = WorkerState.Idle;
         myDataStream = GetComponent<DataConectionController>();
         //SetupLineRenderer(transform.position, Color.green);
         ConfigureRepo();
+
+        myFSM = new FSM<WorkerState>();
+        myFSM.AddState(WorkerState.Idle);
+        myFSM.AddState(WorkerState.Working);
+        myFSM.AddState(WorkerState.Consuming);
+        myFSM.AddState(WorkerState.Producing);
+        myFSM.AddTransition(WorkerState.Idle, WorkerState.Working, () => Print("From Idle to Working!"));
+        myFSM.AddTransition(WorkerState.Working, WorkerState.Consuming, () => Print("From Working to consuming!"));
+        myFSM.SetState(WorkerState.Idle);
+        myFSM.SetState(WorkerState.Working);
+        myFSM.SetState(WorkerState.Consuming);
+    }
+
+    public void Print(string text)
+    {
+        Debug.Log(text + " in state: " + myFSM.currentState);
+
     }
 
     private void ConfigureRepo()
@@ -60,17 +79,15 @@ public class Miner : MonoBehaviour {
     {
         state = WorkerState.Consuming;
         timer = myModel.GetConsumptionCycletime();
-        double unitsWithdrawn = shaftRepos.Consume(myModel.GetUnitsMinedPerSecond()); //myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
+        double unitsWithdrawn = shaftRepos.Consume(myModel.GetUnitsMinedPerSecond());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(shaftRepos.GetConsumptionRepoLocation(), DataFlow.Download);
-        //SetupLineRenderer(shaftRepos.GetConsumptionRepoLocation(), Color.green);
     }
     private void UpdateConsuming()
     {
         if (!IsStateTimerElapsed())
         {
             myDataStream.AnimateDataConnection(timer / myModel.GetConsumptionCycletime());
-            //AnimateLineRendererCycle(timer / myModel.GetConsumptionCycletime());
         }
         else
         {
@@ -100,14 +117,12 @@ public class Miner : MonoBehaviour {
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
         double unitsDeposited = shaftRepos.Produce(unitsWithdrawn);
         myDataStream.SetupDataConection(shaftRepos.GetProductionRepoLocation(), DataFlow.Upload);
-        //SetupLineRenderer(shaftRepos.GetProductionRepoLocation(), Color.red);
     }
     private void UpdateProducing()
     {
         if (!IsStateTimerElapsed())
         {
             myDataStream.AnimateDataConnection(timer / myModel.GetProductionCycletime());
-            //AnimateLineRendererCycle(timer / myModel.GetProductionCycletime());
         }
         else
         {
@@ -124,7 +139,7 @@ public class Miner : MonoBehaviour {
 
     private bool IsStateTimerElapsed()
     {
-        timer -= Time.unscaledDeltaTime;
+        timer -= Time.deltaTime;
         return timer <= 0 ? true : false;
     }
 

@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class PipelineController : MonoBehaviour {
 
-    public GameObject ShaftPrefab;
     public MineShaft[] mineShafts;
+    public CloudController cloud;
     private int lastActiveShaftIndex = 0;
     public Transform ShaftBuyCanvasRoot;
 
 	// Use this for initialization
 	void Start () {
-
-	}
-
+        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex].myProductionRepo);
+    }
 
     public void OnBuyNewShaft()
     {
@@ -31,6 +30,7 @@ public class PipelineController : MonoBehaviour {
     {
         lastActiveShaftIndex++;
         mineShafts[lastActiveShaftIndex].gameObject.SetActive(true);
+        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex].myProductionRepo);
     }
     private void MoveShaftBuyButtonToNextLocation()
     {

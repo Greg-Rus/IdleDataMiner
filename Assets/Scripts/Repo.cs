@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,5 +52,9 @@ public class Repo : MonoBehaviour {
     public bool IsEmpty()
     {
         return currentLoad == 0d ? true : false;
+    }
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }
