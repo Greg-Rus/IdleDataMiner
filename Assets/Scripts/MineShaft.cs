@@ -25,7 +25,6 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
     }
     private void ConfigureMiners()
     {
-        
         for (int i = 0; i < myWorkers.Length; i++)
         {
             myWorkers[i].myModel = myModel as IMinerModel;
@@ -33,11 +32,32 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
             myWorkers[i].myRepo.maxCapacity = myModel.currentWorkerRepoMaxCapacity;
         }
     }
-	
-	void Update () {
-		
-	}
 
+//  Upgrade Mechanic methods
+    public void OnUpgrade()
+    {
+        myModel.ScaleToLevel(myModel.currentLevel + 1);
+        if (ActiveWorkerCount() < myModel.currentNumberOfWorkers) ActivateNewWorker();
+        UpdateWorkers();
+    }
+    private void ActivateNewWorker()
+    {
+        lastActiveWorkerIndex++;
+        myWorkers[lastActiveWorkerIndex].gameObject.SetActive(true);
+    }
+    private int ActiveWorkerCount()
+    {
+        return lastActiveWorkerIndex + 1;
+    }
+    private void UpdateWorkers()
+    {
+        for (int i = 0; i < myWorkers.Length; i++)
+        {
+            myWorkers[i].myRepo.maxCapacity = myModel.currentWorkerRepoMaxCapacity;
+        }
+    }
+
+//  IRepoUseage methods
     public double Consume(double amount)
     {
         return myConsumptionRepo.Withdraw(amount);
@@ -48,38 +68,14 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
         myView.UpdateRepoLoad(myProductionRepo.currentLoad);
         return depositedAmount; //TODO check if needed.
     }
-
-    public void OnUpgrade()
-    {
-        myModel.ScaleToLevel(myModel.currentLevel + 1);
-        if (ActiveWorkerCount() < myModel.currentNumberOfWorkers) ActivateNewWorker();
-        UpdateWorkers();
-    }
-
     public Vector3 GetConsumptionRepoLocation()
     {
         return myConsumptionRepo.transform.position;
     }
-
     public Vector3 GetProductionRepoLocation()
     {
         return myProductionRepo.transform.position;
     }
 
-    private void ActivateNewWorker()
-    {
-        lastActiveWorkerIndex++;
-        myWorkers[lastActiveWorkerIndex].gameObject.SetActive(true);
-    }
-    private int ActiveWorkerCount()
-    {
-        return lastActiveWorkerIndex +1 ;
-    }
-    private void UpdateWorkers()
-    {
-        for (int i = 0; i < myWorkers.Length; i++)
-        {
-            myWorkers[i].myRepo.maxCapacity = myModel.currentWorkerRepoMaxCapacity;
-        }
-    }
+
 }
