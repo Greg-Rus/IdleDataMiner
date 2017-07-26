@@ -19,11 +19,17 @@ public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
     public float baseConsumptionCycleTime = 1f;
     public float baseProductionCycleTime = 1f;
 
-    public double baseProductionRepoMaxCapacity = 230d;
-    public double currentProductionRepoMaxCapacity = 230d;
+    public double baseWorkerRepoMaxCapacity = 35d;
+    public double currentWorkerRepoMaxCapacity = 35d;
 
     public int currentNumberOfWorkers = 1;
     public int maxnumberOfWorkers = 3;
+
+    public float consumptionCycleTime = 1;
+    public float productionCycleTime = 1;
+
+    public double productionRepoMaxCapacity = Mathf.Infinity;
+    public double consumptionRepoMaxCapacity = Mathf.Infinity;
 
     public double GetUnitsMinedPerCycleAtLevel(int newLevel)
     {
@@ -33,9 +39,9 @@ public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
     {
         return baseUnitsUploadedPerCycle * 10d * newLevel * depth;
     }
-    public double GetProductionRepoCapacityAtLevel(int newLevel)
+    public double GetWorkerRepoCapacityAtLevel(int newLevel)
     {
-        return baseProductionRepoMaxCapacity * 10d * newLevel * depth;
+        return baseWorkerRepoMaxCapacity * 10d * newLevel * depth;
     }
     public int GetNumberOfWorkersAtLevel(int newLevel)
     {
@@ -46,9 +52,9 @@ public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
     {
         currentLevel = newLevel;
         currentUnitsMinedPerCycle = GetUnitsMinedPerCycleAtLevel(newLevel);
-        currentProductionRepoMaxCapacity = GetProductionRepoCapacityAtLevel(newLevel);
         currentUnitsUploadedPerCycle = GetUnitsUploadedPerCycleAtLevel(newLevel);
         currentNumberOfWorkers = GetNumberOfWorkersAtLevel(newLevel);
+        currentWorkerRepoMaxCapacity = GetWorkerRepoCapacityAtLevel(newLevel);
     }
 
     public double GetUnitsMinedPerSecond()
@@ -60,4 +66,20 @@ public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
     {
         return currentUnitsUploadedPerCycle;
     }
+
+    public float GetConsumptionCycletime()
+    {
+        return consumptionCycleTime;
+    }
+
+    public float GetProductionCycletime()
+    {
+        return productionCycleTime;
+    }
+
+    public double GetCapacity()
+    {
+        return currentWorkerRepoMaxCapacity;
+    }
+
 }

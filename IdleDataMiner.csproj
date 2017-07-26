@@ -84,12 +84,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
     <Compile Include="Assets\Scripts\Miner.cs" />
     <Compile Include="Assets\Scripts\MineShaft.cs" />
     <Compile Include="Assets\Scripts\MineShaftModel.cs" />
+    <Compile Include="Assets\Scripts\MineShaftView.cs" />
+    <Compile Include="Assets\Scripts\PipelineController.cs" />
     <Compile Include="Assets\Scripts\ProgressionModelMineShaft.cs" />
     <Compile Include="Assets\Scripts\Repo.cs" />
+    <Compile Include="Assets\Scripts\UpgradeMenuHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />

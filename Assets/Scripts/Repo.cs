@@ -5,17 +5,9 @@ using UnityEngine;
 public class Repo : MonoBehaviour {
     public double maxCapacity = 100d;
     public double currentLoad = 0d;
-	// Use this for initialization
-	void Start () {
-		
-	}
 
     public double Deposit(double amount)
     {
-        if (gameObject.name == "ShaftRepo")
-        {
-            Debug.Log("Shaft got: " + amount);
-        }
         double newLoad = currentLoad + amount;
         if (currentLoad == maxCapacity)
         {
@@ -31,7 +23,6 @@ public class Repo : MonoBehaviour {
             currentLoad = newLoad;
             return amount;
         }
-      
     }
 
     public double Withdraw(double amount)

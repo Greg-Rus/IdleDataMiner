@@ -5,10 +5,11 @@ using UnityEngine;
 public enum MinerState { Idle, Consuming, Working, Producing};
 
 public class Miner : MonoBehaviour {
-    public Repo myConsumptionRepo;
-    public Repo myProductionRepo;
+    //public Repo myConsumptionRepo;
+    //public Repo myProductionRepo;
     public Repo myRepo;
     public IMinerModel myModel;
+    public IRepoUseage shaftRepos;
 
     //public Transform consumptionTarget;
     //public Transform productionTarget;
@@ -19,8 +20,8 @@ public class Miner : MonoBehaviour {
 
     //public double unitsMinedPerSecond = 10d;
     //public double unitsUploadedPerSecond = 50d;
-    public float consumptionTime = 1f;
-    public float productionTime = 1f;
+    //public float consumptionTime = 1f;
+    //public float productionTime = 1f;
     public MinerState state;
 
     private float timer = 0f;
@@ -28,8 +29,14 @@ public class Miner : MonoBehaviour {
 	void Start ()
     {
         state = MinerState.Idle;
+        SetupLineRenderer(transform.position, Color.green);
+        ConfigureRepo();
     }
-	
+
+    private void ConfigureRepo()
+    {
+
+    }	
 	// Update is called once per frame
 	void Update () {
         switch (state)
@@ -49,16 +56,16 @@ public class Miner : MonoBehaviour {
     private void TransitionToConsuming()
     {
         state = MinerState.Consuming;
-        timer = consumptionTime;
-        double unitsWithdrawn = myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
+        timer = myModel.GetConsumptionCycletime();
+        double unitsWithdrawn = shaftRepos.Consume(myModel.GetUnitsMinedPerSecond()); //myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
-        SetupLineRenderer(myConsumptionRepo.transform, Color.green);
+        SetupLineRenderer(shaftRepos.GetConsumptionRepoLocation(), Color.green);
     }
     private void UpdateConsuming()
     {
         if (!IsStateTimerElapsed())
         {
-            AnimateLineRendererCycle(timer / consumptionTime);
+            AnimateLineRendererCycle(timer / myModel.GetConsumptionCycletime());
         }
         else
         {
@@ -84,16 +91,16 @@ public class Miner : MonoBehaviour {
     private void TransitionToProducing()
     {
         state = MinerState.Producing;
-        timer = productionTime;
+        timer = myModel.GetProductionCycletime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
-        double unitsDeposited = myProductionRepo.Deposit(unitsWithdrawn);
-        SetupLineRenderer(myProductionRepo.transform, Color.red);
+        double unitsDeposited = shaftRepos.Produce(unitsWithdrawn);
+        SetupLineRenderer(shaftRepos.GetProductionRepoLocation(), Color.red);
     }
     private void UpdateProducing()
     {
         if (!IsStateTimerElapsed())
         {
-            AnimateLineRendererCycle(timer / productionTime);
+            AnimateLineRendererCycle(timer / myModel.GetProductionCycletime());
         }
         else
         {
@@ -114,11 +121,11 @@ public class Miner : MonoBehaviour {
         return timer <= 0 ? true : false;
     }
 
-    private void SetupLineRenderer(Transform target, Color color)
+    private void SetupLineRenderer(Vector3 target, Color color)
     {
         myLineRenderer.SetPosition(0, transform.position);
-        myLineRenderer.SetPosition(1, new Vector3(transform.position.x, target.position.y, transform.position.z));
-        myLineRenderer.SetPosition(2, target.position);
+        myLineRenderer.SetPosition(1, new Vector3(transform.position.x, target.y, transform.position.z));
+        myLineRenderer.SetPosition(2, target);
         myLineRenderer.startColor = color;
         myLineRenderer.endColor = color;
     }
