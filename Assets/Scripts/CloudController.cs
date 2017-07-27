@@ -8,20 +8,12 @@ public enum CloudState { Idle, Downloading, Connecting, Saving}
 [RequireComponent(typeof(Repo))]
 [RequireComponent(typeof(ProgressionModelCloud))]
 public class CloudController : MonoBehaviour {
-    //public CloudState state;
     private Repo myRepo;
     public List<Repo> consumptionRepos;
     public Repo productionRepo;
     private DataConectionController myDataStream;
     private int currentRepoIndex = 0;
-    public ICloudModel myModel;
-
-
-    //public float connectingTime = 0.5f;
-    //public float downloadTime = 1f;
-    //public double unitsDownloadedPerCycle = 100d;
-    //public double unitsSavedPerCycle = 1000d;
-    //public float saveTime = 1f;
+    public ProgressionModelCloud myModel;
 
     private float timer = 0f;
 
@@ -35,7 +27,7 @@ public class CloudController : MonoBehaviour {
 	void Start () {
         myDataStream = GetComponent<DataConectionController>();
         myRepo = GetComponent<Repo>();
-        myModel = GetComponent<ProgressionModelCloud>() as ICloudModel;
+        myModel = GetComponent<ProgressionModelCloud>();
 
         myFSM = new FSM<CloudState>();
         myFSM.AddState(CloudState.Idle, () => { return; });
@@ -86,11 +78,11 @@ public class CloudController : MonoBehaviour {
             }
             else if (!consumptionRepos[currentRepoIndex].IsEmpty())
             {
-                myFSM.SetState(CloudState.Connecting);
+                myFSM.SetState(CloudState.Downloading);
             }
             else
             {
-                myFSM.SetState(CloudState.Downloading);
+                myFSM.SetState(CloudState.Connecting);
             }
         }
     }
@@ -109,7 +101,6 @@ public class CloudController : MonoBehaviour {
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsSavedPerCycle());
         double unitsDeposited = productionRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(productionRepo.GetPosition(), DataFlow.Upload);
-        currentRepoIndex = 0;
     }
 
     private void UpdateSaving()
@@ -122,8 +113,7 @@ public class CloudController : MonoBehaviour {
         {
             if (myRepo.IsEmpty())
             {
-                currentRepoIndex = 0;
-                myFSM.SetState(CloudState.Connecting);
+                myFSM.SetState(CloudState.Downloading);
             }
             else
             {
@@ -135,12 +125,23 @@ public class CloudController : MonoBehaviour {
     private void SelectNextRepo()
     {
         currentRepoIndex++;
-        if (currentRepoIndex > consumptionRepos.Count - 1) currentRepoIndex = 0;
+        if (currentRepoIndex > consumptionRepos.Count - 1)
+        {
+            currentRepoIndex = 0;
+            myFSM.SetState(CloudState.Saving);
+        }
+            
     }
 
     private bool IsStateTimerElapsed()
     {
         timer -= Time.deltaTime;
         return timer <= 0 ? true : false;
+    }
+
+    public void OnUpgrade()
+    {
+        myModel.ScaleTolevel(myModel.currentLevel + 1);
+        myRepo.maxCapacity = myModel.currentCloudMaxCapacity;
     }
 }
