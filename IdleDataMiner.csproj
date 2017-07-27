@@ -90,7 +90,7 @@
     <Compile Include="Assets\Scripts\FSM.cs" />
     <Compile Include="Assets\Scripts\ICloudModel.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
-    <Compile Include="Assets\Scripts\Managercontroller.cs" />
+    <Compile Include="Assets\Scripts\ManagerController.cs" />
     <Compile Include="Assets\Scripts\Miner.cs" />
     <Compile Include="Assets\Scripts\MineShaft.cs" />
     <Compile Include="Assets\Scripts\MineShaftModel.cs" />

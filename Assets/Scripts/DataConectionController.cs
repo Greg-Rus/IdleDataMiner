@@ -12,7 +12,7 @@ public class DataConectionController : MonoBehaviour {
     public Color downloadColor;
     public Color uploadColor;
     // Use this for initialization
-    void Start ()
+    void Awake ()
     {
         myLineRenderer = GetComponent<LineRenderer>();
         CloseDataConnection();

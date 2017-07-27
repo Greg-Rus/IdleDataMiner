@@ -9,9 +9,12 @@ public enum CloudState { Idle, Downloading, Connecting, Saving}
 [RequireComponent(typeof(ProgressionModelCloud))]
 [RequireComponent(typeof(StructureView))]
 public class CloudController : MonoBehaviour {
+    //Debug
+    public CloudState state;
+
     private Repo myRepo;
-    public List<Repo> consumptionRepos;
-    public Repo productionRepo;
+    public List<IWithdrawing> consumptionRepos;
+    public IDepositing productionRepo;
     private DataConectionController myDataStream;
     private int currentRepoIndex = 0;
     private ProgressionModelCloud myModel;
@@ -23,7 +26,7 @@ public class CloudController : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        consumptionRepos = new List<Repo>();
+        consumptionRepos = new List<IWithdrawing>();
     }
 
 	void Start () {
@@ -51,12 +54,14 @@ public class CloudController : MonoBehaviour {
     void Update()
     {
         myFSM.UpdateFSM();
+        state = myFSM.currentState;
     }
 
     private void TransitionToConnecting()
     {
         timer = myModel.GetConnectingTime();
         SelectNextRepo();
+        myDataStream.CloseDataConnection();
     }
 
     private void TransitionToDownloading()
@@ -76,17 +81,21 @@ public class CloudController : MonoBehaviour {
         }
         else
         {
-            if (myRepo.IsFull())
+            if (myRepo.IsFull())    //Cloud is full. Must save data.
+            {
+                myFSM.SetState(CloudState.Saving);                  
+            }
+            else if (!consumptionRepos[currentRepoIndex].IsEmpty())     //More data in repo - keep downloading.
+            {
+                myFSM.SetState(CloudState.Downloading);         
+            }
+            else if (currentRepoIndex == consumptionRepos.Count -1)    //No more data in repo and this was the lowest repo. Save whateve was uploaded.
             {
                 myFSM.SetState(CloudState.Saving);
             }
-            else if (!consumptionRepos[currentRepoIndex].IsEmpty())
+            else    //Not the lowst repo, so pick the next one
             {
-                myFSM.SetState(CloudState.Downloading);
-            }
-            else
-            {
-                myFSM.SetState(CloudState.Connecting);
+                myFSM.SetState(CloudState.Connecting);              
             }
         }
     }
@@ -106,6 +115,7 @@ public class CloudController : MonoBehaviour {
         double unitsDeposited = productionRepo.Deposit(unitsWithdrawn);
         myView.UpdateRepoLoad(myRepo.currentLoad);
         myDataStream.SetupDataConection(productionRepo.GetPosition(), DataFlow.Upload);
+        
     }
 
     private void UpdateSaving()
@@ -118,6 +128,7 @@ public class CloudController : MonoBehaviour {
         {
             if (myRepo.IsEmpty())
             {
+                currentRepoIndex = 0; //Saving finished so lets start downloading from the top again
                 myFSM.SetState(CloudState.Downloading);
             }
             else

@@ -5,9 +5,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(ProgressionModelMineShaft))]
 [RequireComponent(typeof(StructureView))]
-public class MineShaft : MonoBehaviour, IRepoUseage {
+public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
     public Repo myConsumptionRepo;
-    public Repo myProductionRepo;
+    public Repo myRepo;
     public Miner[] myWorkers; //TODO list
     //public Repo[] workerRepos;
     private int lastActiveWorkerIndex = 0;
@@ -25,14 +25,15 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
     {
         myConsumptionRepo.maxCapacity = Mathf.Infinity;
         myConsumptionRepo.currentLoad = Mathf.Infinity;
-        myProductionRepo.maxCapacity = Mathf.Infinity;
+        myRepo.maxCapacity = Mathf.Infinity;
     }
     private void ConfigureMiners()
     {
         for (int i = 0; i < myWorkers.Length; i++)
         {
             myWorkers[i].myModel = myModel as IMinerModel;
-            myWorkers[i].shaftRepos = this as IRepoUseage;
+            myWorkers[i].myConsumptionRepo = myConsumptionRepo as IWithdrawing;
+            myWorkers[i].myProductionRepo = this as IDepositing;
             myWorkers[i].myRepo.maxCapacity = myModel.currentWorkerRepoMaxCapacity;
         }
     }
@@ -62,25 +63,33 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
         }
     }
 
-//  IRepoUseage methods
-    public double Consume(double amount)
+    //Expose myRepo inteface so that other structurse can use this structures as a Repo.
+    public double Withdraw(double amount)
     {
-        return myConsumptionRepo.Withdraw(amount);
-    }
-    public double Produce(double amount)
-    {
-        double depositedAmount = myProductionRepo.Deposit(amount);
-        myView.UpdateRepoLoad(myProductionRepo.currentLoad);
-        return depositedAmount; //TODO check if needed.
-    }
-    public Vector3 GetConsumptionRepoLocation()
-    {
-        return myConsumptionRepo.transform.position;
-    }
-    public Vector3 GetProductionRepoLocation()
-    {
-        return myProductionRepo.transform.position;
+        double withdrawnAmount = myRepo.Withdraw(amount);
+        myView.UpdateRepoLoad(myRepo.currentLoad);
+        return withdrawnAmount;
     }
 
+    public double Deposit(double amount)
+    {
+        double depositedAmount = myRepo.Deposit(amount);
+        myView.UpdateRepoLoad(myRepo.currentLoad);
+        return depositedAmount;
+    }
 
+    public Vector3 GetPosition()
+    {
+        return myRepo.GetPosition();
+    }
+
+    public bool IsFull()
+    {
+        return myRepo.IsFull();
+    }
+
+    public bool IsEmpty()
+    {
+        return myRepo.IsEmpty();
+    }
 }

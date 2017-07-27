@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myConsumptionRepo: {fileID: 114167644051102002}
-  myProductionRepo: {fileID: 114503039544844354}
+  myRepo: {fileID: 114503039544844354}
   myWorkers:
   - {fileID: 114520699544165320}
   - {fileID: 114261472537200072}

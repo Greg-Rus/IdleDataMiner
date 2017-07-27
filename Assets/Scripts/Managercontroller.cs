@@ -2,15 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Managercontroller : MonoBehaviour {
+[RequireComponent(typeof(Repo))]
+[RequireComponent(typeof(StructureView))]
+public class ManagerController : MonoBehaviour , IDepositing{
+    private Repo myRepo;
+    private StructureView myView;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    void Start()
+    {
+        myRepo = GetComponent<Repo>();
+        myRepo.maxCapacity = Mathf.Infinity;
+        myView = GetComponent<StructureView>();
+    }
+
+    //Expose IDepositing
+    public double Deposit(double amount)
+    {
+        double depositedAmount = myRepo.Deposit(amount);
+        myView.UpdateRepoLoad(myRepo.currentLoad);
+        return depositedAmount;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return myRepo.GetPosition();
+    }
+
+    public bool IsEmpty()
+    {
+        return myRepo.IsEmpty();
+    }
+
+    public bool IsFull()
+    {
+        return myRepo.IsFull();
+    }
+
+
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

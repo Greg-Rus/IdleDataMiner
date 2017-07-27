@@ -21,18 +21,18 @@ public interface IRepoUseage
     Vector3 GetProductionRepoLocation();
 }
 
-public interface IConsumable //TODO test if good idea for pipeline management.
+public interface IWithdrawing //TODO test if good idea for pipeline management.
 {
-    double Consume(double amount);
-    Vector3 GetRepoLocation();
+    double Withdraw(double amount);
+    Vector3 GetPosition();
     bool IsFull();
     bool IsEmpty();
 }
 
-public interface IProducable
+public interface IDepositing
 {
-    double Produce(double amount);
-    Vector3 GetRepoLocation();
+    double Deposit(double amount);
+    Vector3 GetPosition();
     bool IsFull();
     bool IsEmpty();
 }

@@ -10,7 +10,9 @@ public class Miner : MonoBehaviour {
     //public Repo myProductionRepo;
     public Repo myRepo;
     public IMinerModel myModel;
-    public IRepoUseage shaftRepos;
+    //public IRepoUseage shaftRepos;
+    public IDepositing myProductionRepo;
+    public IWithdrawing myConsumptionRepo;
     public DataConectionController myDataStream;
 
     //public Transform consumptionTarget;
@@ -55,9 +57,9 @@ public class Miner : MonoBehaviour {
     private void TransitionToConsuming()
     {
         timer = myModel.GetConsumptionCycletime();
-        double unitsWithdrawn = shaftRepos.Consume(myModel.GetUnitsMinedPerSecond());
+        double unitsWithdrawn = myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
-        myDataStream.SetupDataConection(shaftRepos.GetConsumptionRepoLocation(), DataFlow.Download);
+        myDataStream.SetupDataConection(myConsumptionRepo.GetPosition(), DataFlow.Download);
     }
     private void UpdateConsuming()
     {
@@ -82,8 +84,8 @@ public class Miner : MonoBehaviour {
     {
         timer = myModel.GetProductionCycletime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
-        double unitsDeposited = shaftRepos.Produce(unitsWithdrawn);
-        myDataStream.SetupDataConection(shaftRepos.GetProductionRepoLocation(), DataFlow.Upload);
+        double unitsDeposited = myProductionRepo.Deposit(unitsWithdrawn);
+        myDataStream.SetupDataConection(myProductionRepo.GetPosition(), DataFlow.Upload);
     }
     private void UpdateProducing()
     {

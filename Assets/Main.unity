@@ -297,6 +297,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114177136364207688, guid: cc3bad60667e9224db4a166aa88aa305,
+        type: 2}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cc3bad60667e9224db4a166aa88aa305, type: 2}
   m_IsPrefabParent: 0
@@ -996,7 +1001,9 @@ GameObject:
   m_Component:
   - component: {fileID: 656492336}
   - component: {fileID: 656492335}
+  - component: {fileID: 656492337}
   - component: {fileID: 656492334}
+  - component: {fileID: 656492338}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1012,11 +1019,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 656492333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93d230685a442424d94f0e8ee827fe29, type: 3}
+  m_Script: {fileID: 11500000, guid: a3ba15df9615fc447b94bafb9522c97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCapacity: 100
-  currentLoad: 0
 --- !u!212 &656492335
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1072,6 +1077,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &656492337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 656492333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d230685a442424d94f0e8ee827fe29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCapacity: 100
+  currentLoad: 0
+--- !u!114 &656492338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 656492333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ec756fa1ab6b474f8d1d1d0787ff14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  repoLoadDisplay: {fileID: 386700281}
+  structureLevelDisplay: {fileID: 0}
 --- !u!1 &673204889
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,6 +3426,7 @@ MonoBehaviour:
   - {fileID: 468717655}
   - {fileID: 1683541744}
   cloud: {fileID: 2012173622}
+  manager: {fileID: 656492334}
   ShaftBuyCanvasRoot: {fileID: 1609119499}
 --- !u!4 &1778239076
 Transform:
@@ -3961,8 +3993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245af28cf36a8a6498908fc7c7dae31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumptionRepos: []
-  productionRepo: {fileID: 656492334}
+  state: 0
 --- !u!114 &2012173623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4010,7 +4041,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Positions: []
   m_Parameters:
     serializedVersion: 2

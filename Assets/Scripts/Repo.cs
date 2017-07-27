@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Repo : MonoBehaviour {
+public class Repo : MonoBehaviour, IWithdrawing, IDepositing {
     public double maxCapacity = 100d;
     public double currentLoad = 0d;
 

@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class PipelineController : MonoBehaviour {
 
-    public MineShaft[] mineShafts;
-    public CloudController cloud;
+    public MineShaft[] mineShafts;          //Generates units.
+    public CloudController cloud;           //Tranferes units.
+    public ManagerController manager;       //Banks units.
     private int lastActiveShaftIndex = 0;
     public Transform ShaftBuyCanvasRoot;
 
 	// Use this for initialization
 	void Start () {
-        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex].myProductionRepo);
+        SetupPipeline();
+    }
+
+    private void SetupPipeline()
+    {
+        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex]);
+        cloud.productionRepo = manager;
     }
 
     public void OnBuyNewShaft()
@@ -31,7 +38,7 @@ public class PipelineController : MonoBehaviour {
         lastActiveShaftIndex++;
         mineShafts[lastActiveShaftIndex].gameObject.SetActive(true);
         mineShafts[lastActiveShaftIndex].OnUpgrade();
-        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex].myProductionRepo);
+        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex]);
     }
     private void MoveShaftBuyButtonToNextLocation()
     {
