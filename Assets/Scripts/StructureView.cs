@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MineShaftView : MonoBehaviour, IMineShaftUI
-{
+public class StructureView : MonoBehaviour {
     public Text repoLoadDisplay;
-    public Text shaftLevelDisplay; 
+    public Text structureLevelDisplay;
 
     public void UpdateRepoLoad(double load)
     {
@@ -15,8 +14,6 @@ public class MineShaftView : MonoBehaviour, IMineShaftUI
 
     public void UpdateLevel(int level)
     {
-        shaftLevelDisplay.text = level.ToString();
+        structureLevelDisplay.text = level.ToString();
     }
-    
-
 }

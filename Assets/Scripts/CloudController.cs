@@ -7,13 +7,15 @@ public enum CloudState { Idle, Downloading, Connecting, Saving}
 [RequireComponent(typeof(DataConectionController))]
 [RequireComponent(typeof(Repo))]
 [RequireComponent(typeof(ProgressionModelCloud))]
+[RequireComponent(typeof(StructureView))]
 public class CloudController : MonoBehaviour {
     private Repo myRepo;
     public List<Repo> consumptionRepos;
     public Repo productionRepo;
     private DataConectionController myDataStream;
     private int currentRepoIndex = 0;
-    public ProgressionModelCloud myModel;
+    private ProgressionModelCloud myModel;
+    private StructureView myView;
 
     private float timer = 0f;
 
@@ -28,6 +30,7 @@ public class CloudController : MonoBehaviour {
         myDataStream = GetComponent<DataConectionController>();
         myRepo = GetComponent<Repo>();
         myModel = GetComponent<ProgressionModelCloud>();
+        myView = GetComponent<StructureView>();
 
         myFSM = new FSM<CloudState>();
         myFSM.AddState(CloudState.Idle, () => { return; });
@@ -61,6 +64,7 @@ public class CloudController : MonoBehaviour {
         timer = myModel.GetDownloadTime();
         double unitsWithdrawn = consumptionRepos[currentRepoIndex].Withdraw(myModel.GetUnitsDownloadedPerCycle());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
+        myView.UpdateRepoLoad(myRepo.currentLoad);
         myDataStream.SetupDataConection(consumptionRepos[currentRepoIndex].GetPosition(), DataFlow.Download);
     }
 
@@ -100,6 +104,7 @@ public class CloudController : MonoBehaviour {
         timer = myModel.GetSaveTime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsSavedPerCycle());
         double unitsDeposited = productionRepo.Deposit(unitsWithdrawn);
+        myView.UpdateRepoLoad(myRepo.currentLoad);
         myDataStream.SetupDataConection(productionRepo.GetPosition(), DataFlow.Upload);
     }
 
@@ -143,5 +148,6 @@ public class CloudController : MonoBehaviour {
     {
         myModel.ScaleTolevel(myModel.currentLevel + 1);
         myRepo.maxCapacity = myModel.currentCloudMaxCapacity;
+        myView.UpdateLevel(myModel.currentLevel);
     }
 }

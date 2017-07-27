@@ -3,16 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ProgressionModelMineShaft))]
+[RequireComponent(typeof(StructureView))]
 public class MineShaft : MonoBehaviour, IRepoUseage {
     public Repo myConsumptionRepo;
     public Repo myProductionRepo;
     public Miner[] myWorkers; //TODO list
     //public Repo[] workerRepos;
     private int lastActiveWorkerIndex = 0;
-    public ProgressionModelMineShaft myModel;
-    public MineShaftView myView;
+    private ProgressionModelMineShaft myModel;
+    private StructureView myView;
 	// Use this for initialization
 	void Awake () {
+        myModel = GetComponent<ProgressionModelMineShaft>();
+        myView = GetComponent<StructureView>();
         ConfigureRepos();
         ConfigureMiners();
     }
@@ -39,6 +43,7 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
         myModel.ScaleToLevel(myModel.currentLevel + 1);
         if (ActiveWorkerCount() < myModel.currentNumberOfWorkers) ActivateNewWorker();
         UpdateWorkers();
+        myView.UpdateLevel(myModel.currentLevel);
     }
     private void ActivateNewWorker()
     {

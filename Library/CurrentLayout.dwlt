@@ -155,10 +155,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 683, y: 492}
+  m_MinSize: {x: 508, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 13
+  controlID: 75
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -257,17 +257,17 @@ MonoBehaviour:
     y: 0
     width: 405
     height: 731
-  m_MinSize: {x: 277, y: 71}
+  m_MinSize: {x: 102, y: 121}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 24}
+  m_ActualView: {fileID: 25}
   m_Panes:
   - {fileID: 24}
   - {fileID: 25}
   - {fileID: 16}
   - {fileID: 13}
   - {fileID: 12}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -645,9 +645,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.0137818, y: -2.2317877, z: 0}
+    m_Target: {x: -1.679734, y: -1.7530808, z: 0}
     speed: 2
-    m_Value: {x: -0.0137818, y: -2.2317877, z: 0}
+    m_Value: {x: -1.679734, y: -1.7530808, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -674,9 +674,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 12.647572
+    m_Target: 8.8763275
     speed: 2
-    m_Value: 12.647572
+    m_Value: 8.8763275
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -727,10 +727,10 @@ MonoBehaviour:
     m_Folders:
     - Assets/Scripts
   m_ViewMode: 1
-  m_StartGridSize: 16
+  m_StartGridSize: 41
   m_LastFolders:
   - Assets/Scripts
-  m_LastFoldersGridSize: 16
+  m_LastFoldersGridSize: 41
   m_LastProjectPath: C:\Users\grzeg_000\Documents\GitHub\IdleDataMiner\IdleDataMiner
   m_IsLocked: 0
   m_FolderTreeState:
@@ -818,7 +818,7 @@ MonoBehaviour:
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
-    m_GridSize: 16
+    m_GridSize: 41
   m_DirectoriesAreaWidth: 299
 --- !u!114 &23
 MonoBehaviour:
@@ -847,10 +847,10 @@ MonoBehaviour:
     width: 224
     height: 439
   m_TreeViewState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 7c290000
-    m_LastClickedID: 10620
-    m_ExpandedIDs: 18fcffff1afcffff00000000702800007c290000
+    scrollPos: {x: 0, y: 10}
+    m_SelectedIDs: 64050000
+    m_LastClickedID: 0
+    m_ExpandedIDs: 14fcffff18fcffff1afcffff00000000702800007c290000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -899,7 +899,7 @@ MonoBehaviour:
     y: 92
     width: 403
     height: 710
-  m_ScrollPosition: {x: 0, y: 772.3551}
+  m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 119
