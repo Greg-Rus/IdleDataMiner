@@ -6,22 +6,26 @@ public enum CloudState { Idle, Downloading, Connecting, Saving}
 
 [RequireComponent(typeof(DataConectionController))]
 [RequireComponent(typeof(Repo))]
+[RequireComponent(typeof(ProgressionModelCloud))]
 public class CloudController : MonoBehaviour {
-    public CloudState state;
+    //public CloudState state;
     private Repo myRepo;
     public List<Repo> consumptionRepos;
     public Repo productionRepo;
     private DataConectionController myDataStream;
     private int currentRepoIndex = 0;
+    public ICloudModel myModel;
 
 
-    public float connectingTime = 0.5f;
-    public float downloadTime = 1f;
-    public double unitsDownloadedPerCycle = 100d;
-    public double unitsSavedPerCycle = 1000d;
-    public float saveTime = 1f;
+    //public float connectingTime = 0.5f;
+    //public float downloadTime = 1f;
+    //public double unitsDownloadedPerCycle = 100d;
+    //public double unitsSavedPerCycle = 1000d;
+    //public float saveTime = 1f;
 
     private float timer = 0f;
+
+    private FSM<CloudState> myFSM;
     // Use this for initialization
     void Awake()
     {
@@ -31,36 +35,39 @@ public class CloudController : MonoBehaviour {
 	void Start () {
         myDataStream = GetComponent<DataConectionController>();
         myRepo = GetComponent<Repo>();
+        myModel = GetComponent<ProgressionModelCloud>() as ICloudModel;
+
+        myFSM = new FSM<CloudState>();
+        myFSM.AddState(CloudState.Idle, () => { return; });
+        myFSM.AddState(CloudState.Downloading, UpdateDownloading);
+        myFSM.AddState(CloudState.Saving, UpdateSaving);
+        myFSM.AddState(CloudState.Connecting, UpdateConnecting);
+        myFSM.AddTransition(CloudState.Idle, CloudState.Connecting, TransitionToConnecting);
+        myFSM.AddTransition(CloudState.Downloading, CloudState.Downloading, TransitionToDownloading);
+        myFSM.AddTransition(CloudState.Downloading, CloudState.Connecting, TransitionToConnecting);
+        myFSM.AddTransition(CloudState.Connecting, CloudState.Downloading, TransitionToDownloading);
+        myFSM.AddTransition(CloudState.Downloading, CloudState.Saving, TransitionToSaving);
+        myFSM.AddTransition(CloudState.Saving, CloudState.Downloading, TransitionToDownloading);
+        myFSM.AddTransition(CloudState.Saving, CloudState.Saving, TransitionToSaving);
+        myFSM.SetState(CloudState.Idle);
+        myFSM.SetState(CloudState.Connecting);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        switch (state)
-        {
-            case CloudState.Idle: UpdateIdle(); break;
-            case CloudState.Downloading: UpdateDownloading(); break;
-            case CloudState.Connecting: UpdateConnecting(); break;
-            case CloudState.Saving: UpdateSaving(); break;
-        }
+        myFSM.UpdateFSM();
     }
 
-    private void UpdateIdle()
-    {
-        TransitionToConnecting();
-    }
     private void TransitionToConnecting()
     {
-        state = CloudState.Connecting;
-        timer = connectingTime;
+        timer = myModel.GetConnectingTime();
         SelectNextRepo();
     }
 
     private void TransitionToDownloading()
     {
-        state = CloudState.Downloading;
-        timer = downloadTime;
-        double unitsWithdrawn = consumptionRepos[currentRepoIndex].Withdraw(unitsDownloadedPerCycle);
+        timer = myModel.GetDownloadTime();
+        double unitsWithdrawn = consumptionRepos[currentRepoIndex].Withdraw(myModel.GetUnitsDownloadedPerCycle());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(consumptionRepos[currentRepoIndex].GetPosition(), DataFlow.Download);
     }
@@ -69,21 +76,21 @@ public class CloudController : MonoBehaviour {
     {
         if (!IsStateTimerElapsed())
         {
-            myDataStream.AnimateDataConnection(timer / downloadTime);
+            myDataStream.AnimateDataConnection(timer / myModel.GetDownloadTime());
         }
         else
         {
             if (myRepo.IsFull())
             {
-                TransitionToSaving();
+                myFSM.SetState(CloudState.Saving);
             }
             else if (!consumptionRepos[currentRepoIndex].IsEmpty())
             {
-                TransitionToConnecting();
+                myFSM.SetState(CloudState.Connecting);
             }
             else
             {
-                TransitionToDownloading();
+                myFSM.SetState(CloudState.Downloading);
             }
         }
     }
@@ -92,15 +99,14 @@ public class CloudController : MonoBehaviour {
     {
         if (IsStateTimerElapsed())
         {
-            TransitionToDownloading();
+            myFSM.SetState(CloudState.Downloading);
         }
     }
 
     private void TransitionToSaving()
     {
-        state = CloudState.Saving;
-        timer = saveTime;
-        double unitsWithdrawn = myRepo.Withdraw(unitsSavedPerCycle);
+        timer = myModel.GetSaveTime();
+        double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsSavedPerCycle());
         double unitsDeposited = productionRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(productionRepo.GetPosition(), DataFlow.Upload);
         currentRepoIndex = 0;
@@ -110,17 +116,18 @@ public class CloudController : MonoBehaviour {
     {
         if (!IsStateTimerElapsed())
         {
-            myDataStream.AnimateDataConnection(timer / saveTime);
+            myDataStream.AnimateDataConnection(timer / myModel.GetSaveTime());
         }
         else
         {
             if (myRepo.IsEmpty())
             {
-                TransitionToConnecting();
+                currentRepoIndex = 0;
+                myFSM.SetState(CloudState.Connecting);
             }
             else
             {
-                TransitionToSaving();
+                myFSM.SetState(CloudState.Saving);
             }
         }
     }

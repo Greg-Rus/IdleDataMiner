@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressionModelCloud : MonoBehaviour {
+public class ProgressionModelCloud : MonoBehaviour, ICloudModel {
 
     public int currentLevel;
     public int maxlevel;
@@ -31,6 +31,10 @@ public class ProgressionModelCloud : MonoBehaviour {
     public double GetCloudCapacity()
     {
         return currentCloudMaxCapacity;
+    }
+    public float GetConnectingTime()
+    {
+        return connectingTime;
     }
     public float GetDownloadTime()
     {

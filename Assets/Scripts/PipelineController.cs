@@ -30,6 +30,7 @@ public class PipelineController : MonoBehaviour {
     {
         lastActiveShaftIndex++;
         mineShafts[lastActiveShaftIndex].gameObject.SetActive(true);
+        mineShafts[lastActiveShaftIndex].OnUpgrade();
         cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex].myProductionRepo);
     }
     private void MoveShaftBuyButtonToNextLocation()

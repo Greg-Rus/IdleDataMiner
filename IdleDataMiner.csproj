@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\CloudController.cs" />
     <Compile Include="Assets\Scripts\DataConectionController.cs" />
     <Compile Include="Assets\Scripts\FSM.cs" />
+    <Compile Include="Assets\Scripts\ICloudModel.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
     <Compile Include="Assets\Scripts\Miner.cs" />
     <Compile Include="Assets\Scripts\MineShaft.cs" />

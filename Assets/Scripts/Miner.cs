@@ -34,50 +34,26 @@ public class Miner : MonoBehaviour {
     {
         state = WorkerState.Idle;
         myDataStream = GetComponent<DataConectionController>();
-        //SetupLineRenderer(transform.position, Color.green);
-        ConfigureRepo();
 
         myFSM = new FSM<WorkerState>();
-        myFSM.AddState(WorkerState.Idle);
-        myFSM.AddState(WorkerState.Working);
-        myFSM.AddState(WorkerState.Consuming);
-        myFSM.AddState(WorkerState.Producing);
-        myFSM.AddTransition(WorkerState.Idle, WorkerState.Working, () => Print("From Idle to Working!"));
-        myFSM.AddTransition(WorkerState.Working, WorkerState.Consuming, () => Print("From Working to consuming!"));
+        myFSM.AddState(WorkerState.Idle, () => { return; });
+        myFSM.AddState(WorkerState.Consuming, UpdateConsuming);
+        myFSM.AddState(WorkerState.Producing, UpdateProducing);
+        myFSM.AddTransition(WorkerState.Idle, WorkerState.Consuming, TransitionToConsuming);
+        myFSM.AddTransition(WorkerState.Consuming, WorkerState.Producing, TransitionToProducing);
+        myFSM.AddTransition(WorkerState.Consuming, WorkerState.Consuming, TransitionToConsuming);
+        myFSM.AddTransition(WorkerState.Producing, WorkerState.Consuming, TransitionToConsuming);
+        myFSM.AddTransition(WorkerState.Producing, WorkerState.Producing, TransitionToProducing);
         myFSM.SetState(WorkerState.Idle);
-        myFSM.SetState(WorkerState.Working);
         myFSM.SetState(WorkerState.Consuming);
     }
 
-    public void Print(string text)
-    {
-        Debug.Log(text + " in state: " + myFSM.currentState);
-
-    }
-
-    private void ConfigureRepo()
-    {
-
-    }	
-	// Update is called once per frame
 	void Update () {
-        switch (state)
-        {
-            case WorkerState.Idle: UpdateIdle();break;
-            case WorkerState.Consuming: UpdateConsuming();break;
-            case WorkerState.Working: UpdateWorking();break;
-            case WorkerState.Producing: UpdateProducing();break;
-        }
+        myFSM.UpdateFSM();
 	}
-
-    private void UpdateIdle()
-    {
-        state = WorkerState.Consuming;
-    }
 
     private void TransitionToConsuming()
     {
-        state = WorkerState.Consuming;
         timer = myModel.GetConsumptionCycletime();
         double unitsWithdrawn = shaftRepos.Consume(myModel.GetUnitsMinedPerSecond());
         double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
@@ -93,26 +69,17 @@ public class Miner : MonoBehaviour {
         {
             if (myRepo.IsFull())
             {
-                TransitionToWorking();
+                myFSM.SetState(WorkerState.Producing);
             }
             else
             {
-                TransitionToConsuming();
+                myFSM.SetState(WorkerState.Consuming);
             }
         }
     }
 
-    private void TransitionToWorking()
-    {
-        state = WorkerState.Working;
-    }
-    private void UpdateWorking()
-    {
-        TransitionToProducing();
-    }
     private void TransitionToProducing()
     {
-        state = WorkerState.Producing;
         timer = myModel.GetProductionCycletime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
         double unitsDeposited = shaftRepos.Produce(unitsWithdrawn);
@@ -128,11 +95,11 @@ public class Miner : MonoBehaviour {
         {
             if (myRepo.IsEmpty())
             {
-                TransitionToConsuming();
+                myFSM.SetState(WorkerState.Consuming);
             }
             else
             {
-                TransitionToProducing();
+                myFSM.SetState(WorkerState.Producing);
             }
         }
     }
@@ -142,31 +109,4 @@ public class Miner : MonoBehaviour {
         timer -= Time.deltaTime;
         return timer <= 0 ? true : false;
     }
-
-    //private void SetupLineRenderer(Vector3 target, Color color)
-    //{
-    //    myLineRenderer.SetPosition(0, transform.position);
-    //    myLineRenderer.SetPosition(1, new Vector3(transform.position.x, target.y, transform.position.z));
-    //    myLineRenderer.SetPosition(2, target);
-    //    myLineRenderer.startColor = color;
-    //    myLineRenderer.endColor = color;
-    //}
-
-    //private void AnimateLineRendererCycle(float t)
-    //{
-
-    //    if (t < 0.5f)
-    //    {
-    //        float newSize = Mathf.Lerp(minWidth, maxWidth, t * 2);
-    //        myLineRenderer.startWidth = newSize;
-    //        myLineRenderer.endWidth = newSize;
-    //    }
-    //    else
-    //    {
-    //        float newSize = Mathf.Lerp(maxWidth, minWidth, t - 0.5f);
-    //        myLineRenderer.startWidth = newSize;
-    //        myLineRenderer.endWidth = newSize;
-    //    }
-            
-    //}
 }

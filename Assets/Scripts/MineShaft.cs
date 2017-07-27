@@ -12,7 +12,7 @@ public class MineShaft : MonoBehaviour, IRepoUseage {
     public ProgressionModelMineShaft myModel;
     public MineShaftView myView;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         ConfigureRepos();
         ConfigureMiners();
     }
