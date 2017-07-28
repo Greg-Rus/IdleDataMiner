@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\CloudController.cs" />
     <Compile Include="Assets\Scripts\DataConectionController.cs" />
     <Compile Include="Assets\Scripts\FSM.cs" />
+    <Compile Include="Assets\Scripts\GameSaver.cs" />
     <Compile Include="Assets\Scripts\ICloudModel.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
     <Compile Include="Assets\Scripts\ManagerController.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Assets\Scripts\ProgressionModelCloud.cs" />
     <Compile Include="Assets\Scripts\ProgressionModelMineShaft.cs" />
     <Compile Include="Assets\Scripts\Repo.cs" />
+    <Compile Include="Assets\Scripts\SaveGame.cs" />
     <Compile Include="Assets\Scripts\StructureView.cs" />
     <Compile Include="Assets\Scripts\UpgradeMenuHandler.cs" />
   </ItemGroup>

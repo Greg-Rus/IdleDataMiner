@@ -8,11 +8,12 @@ public class ManagerController : MonoBehaviour , IDepositing{
     private Repo myRepo;
     private StructureView myView;
 
-    void Start()
+    void Awake()
     {
         myRepo = GetComponent<Repo>();
         myRepo.maxCapacity = Mathf.Infinity;
         myView = GetComponent<StructureView>();
+        RestoreState();
     }
 
     //Expose IDepositing
@@ -38,7 +39,24 @@ public class ManagerController : MonoBehaviour , IDepositing{
         return myRepo.IsFull();
     }
 
+    private void RestoreState()
+    {
+        if (GameSaver.instance.saveStateExists)
+        {
+            myRepo.Deposit(GameSaver.instance.RestoreDouble(gameObject.name + "repo"));
+            myView.UpdateRepoLoad(myRepo.currentLoad);
+        }
+    }
+    private void SaveState()
+    {
+        GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
+    }
 
-	
+    private void OnApplicationQuit()
+    {
+        SaveState();
+    }
+
+
 
 }

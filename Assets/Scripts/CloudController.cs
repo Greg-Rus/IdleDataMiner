@@ -27,14 +27,14 @@ public class CloudController : MonoBehaviour {
     void Awake()
     {
         consumptionRepos = new List<IWithdrawing>();
-    }
-
-	void Start () {
         myDataStream = GetComponent<DataConectionController>();
         myRepo = GetComponent<Repo>();
         myModel = GetComponent<ProgressionModelCloud>();
         myView = GetComponent<StructureView>();
+        RestoreState();
+    }
 
+	void Start () {
         myFSM = new FSM<CloudState>();
         myFSM.AddState(CloudState.Idle, () => { return; });
         myFSM.AddState(CloudState.Downloading, UpdateDownloading);
@@ -157,8 +157,44 @@ public class CloudController : MonoBehaviour {
 
     public void OnUpgrade()
     {
-        myModel.ScaleTolevel(myModel.currentLevel + 1);
+        UpgradeToLevel(myModel.currentLevel +1);
+    }
+
+    public void UpgradeToLevel(int newLevel)
+    {
+        myModel.ScaleTolevel(newLevel);
         myRepo.maxCapacity = myModel.currentCloudMaxCapacity;
         myView.UpdateLevel(myModel.currentLevel);
+    }
+
+    private void RestoreState()
+    {
+        if (GameSaver.instance.saveStateExists)
+        {
+            int oldLevel = GameSaver.instance.RestoreInt(gameObject.name + "level");
+            UpgradeToLevel(oldLevel);
+            myRepo.Deposit(GameSaver.instance.RestoreDouble(gameObject.name + "repo"));
+            myView.UpdateRepoLoad(myRepo.currentLoad);
+        }
+    }
+    public void GenerateUnitsForIdleTime(float seconds)
+    {
+        double totalIdleProduction = 0d;
+        for (int i = 0; i < consumptionRepos.Count; i++) //Simplified calculation.
+        {
+            totalIdleProduction += consumptionRepos[i].Withdraw(myModel.GetProductionPerSecond() / consumptionRepos.Count * seconds);
+        }
+        Debug.Log("Units: " + totalIdleProduction + " " + seconds);
+        productionRepo.Deposit(totalIdleProduction);
+    }
+    private void SaveState()
+    {
+        GameSaver.instance.StoreInt(gameObject.name + "level", myModel.currentLevel);
+        GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveState();
     }
 }

@@ -19,6 +19,8 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         myView = GetComponent<StructureView>();
         ConfigureRepos();
         ConfigureMiners();
+        UpgradeToLevel(1);
+        RestoreState();
     }
 
     private void ConfigureRepos()
@@ -41,11 +43,22 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
 //  Upgrade Mechanic methods
     public void OnUpgrade()
     {
-        myModel.ScaleToLevel(myModel.currentLevel + 1);
+        UpgradeToLevel(myModel.currentLevel + 1);
+    }
+
+    private void UpgradeToLevel(int newLevel)
+    {
+        myModel.ScaleToLevel(newLevel);
         if (ActiveWorkerCount() < myModel.currentNumberOfWorkers) ActivateNewWorker();
         UpdateWorkers();
         myView.UpdateLevel(myModel.currentLevel);
     }
+    public void GenerateUnitsForIdleTime(float seconds)
+    {
+        Debug.Log("Idle profit for: " + gameObject.name + " " + myModel.GetProductionPerSecond() * seconds);
+        Deposit(myModel.GetProductionPerSecond() * seconds);
+    }
+
     private void ActivateNewWorker()
     {
         lastActiveWorkerIndex++;
@@ -70,26 +83,42 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         myView.UpdateRepoLoad(myRepo.currentLoad);
         return withdrawnAmount;
     }
-
     public double Deposit(double amount)
     {
         double depositedAmount = myRepo.Deposit(amount);
         myView.UpdateRepoLoad(myRepo.currentLoad);
         return depositedAmount;
     }
-
     public Vector3 GetPosition()
     {
         return myRepo.GetPosition();
     }
-
     public bool IsFull()
     {
         return myRepo.IsFull();
     }
-
     public bool IsEmpty()
     {
         return myRepo.IsEmpty();
+    }
+
+    private void RestoreState()
+    {
+        if (GameSaver.instance.saveStateExists)
+        {
+            int oldLevel = GameSaver.instance.RestoreInt(gameObject.name + "level");
+            UpgradeToLevel(oldLevel);
+            Deposit(GameSaver.instance.RestoreDouble(gameObject.name + "repo"));
+        }
+    }
+    private void SaveState()
+    {
+        GameSaver.instance.StoreInt(gameObject.name + "level", myModel.currentLevel);
+        GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveState();
     }
 }

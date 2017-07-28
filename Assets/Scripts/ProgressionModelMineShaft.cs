@@ -82,4 +82,9 @@ public class ProgressionModelMineShaft : MonoBehaviour, IMinerModel
         return currentWorkerRepoMaxCapacity;
     }
 
+    public double GetProductionPerSecond()
+    {
+        return currentUnitsMinedPerCycle / (consumptionCycleTime + productionCycleTime);    //Simplified calculation.
+    }
+
 }

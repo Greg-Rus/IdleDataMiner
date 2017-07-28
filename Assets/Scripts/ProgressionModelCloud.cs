@@ -65,4 +65,10 @@ public class ProgressionModelCloud : MonoBehaviour, ICloudModel {
         currentUnitsDownloadedPerCycle = GetUnitsDownloadedPerCycleAtLevel(newLevel);
         currentUnitsSavedPerCycle = GetUnitsSavedPerCycleAtLevel(newLevel);
     }
+
+    public double GetProductionPerSecond()
+    {
+        return currentUnitsSavedPerCycle / (downloadTime + saveTime);   //Simplified calculation. 
+                                                                        //Should take into account connectiond delays and bottlenecks.
+    }
 }
