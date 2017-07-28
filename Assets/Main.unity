@@ -297,26 +297,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114177136364207688, guid: cc3bad60667e9224db4a166aa88aa305,
-        type: 2}
-      propertyPath: m_Text
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114841965809750648, guid: cc3bad60667e9224db4a166aa88aa305,
-        type: 2}
-      propertyPath: currentUnitsMinedPerCycle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114841965809750648, guid: cc3bad60667e9224db4a166aa88aa305,
-        type: 2}
-      propertyPath: currentUnitsUploadedPerCycle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114841965809750648, guid: cc3bad60667e9224db4a166aa88aa305,
-        type: 2}
-      propertyPath: currentWorkerRepoMaxCapacity
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cc3bad60667e9224db4a166aa88aa305, type: 2}
   m_IsPrefabParent: 0

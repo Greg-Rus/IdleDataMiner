@@ -8,7 +8,7 @@ public class ManagerController : MonoBehaviour , IDepositing{
     private Repo myRepo;
     private StructureView myView;
 
-    void Awake()
+    void Start()
     {
         myRepo = GetComponent<Repo>();
         myRepo.maxCapacity = Mathf.Infinity;
@@ -23,17 +23,14 @@ public class ManagerController : MonoBehaviour , IDepositing{
         myView.UpdateRepoLoad(myRepo.currentLoad);
         return depositedAmount;
     }
-
     public Vector3 GetPosition()
     {
         return myRepo.GetPosition();
     }
-
     public bool IsEmpty()
     {
         return myRepo.IsEmpty();
     }
-
     public bool IsFull()
     {
         return myRepo.IsFull();

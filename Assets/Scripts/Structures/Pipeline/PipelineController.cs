@@ -66,14 +66,16 @@ public class PipelineController : MonoBehaviour {
     private void UpdateIdleProfits()
     {
         TimeSpan timeSinceLastGame = DateTime.Now - GameSaver.instance.GetTimeSinceLastGame();
-        if (timeSinceLastGame.Seconds > 1)
+        //timeSinceLastGame = TimeSpan.FromSeconds(Math.Round(timeSinceLastGame.TotalSeconds));
+        double secondsSinceLastGame = Math.Round(timeSinceLastGame.TotalSeconds);
+        if (secondsSinceLastGame > 1)
         {
             for (int i = 0; i <= lastActiveShaftIndex; i++)
             {
-                mineShafts[i].GenerateUnitsForIdleTime(timeSinceLastGame.Seconds);
+                mineShafts[i].GenerateUnitsForIdleTime(secondsSinceLastGame);
             }
         }
-        cloud.GenerateUnitsForIdleTime(timeSinceLastGame.Seconds);
+        cloud.GenerateUnitsForIdleTime(secondsSinceLastGame);
     }
 
     private void OnApplicationQuit()

@@ -84,25 +84,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\CloudController.cs" />
-    <Compile Include="Assets\Scripts\DataConectionController.cs" />
     <Compile Include="Assets\Scripts\FSM.cs" />
     <Compile Include="Assets\Scripts\GameSaver.cs" />
     <Compile Include="Assets\Scripts\ICloudModel.cs" />
     <Compile Include="Assets\Scripts\Interfactes.cs" />
-    <Compile Include="Assets\Scripts\ManagerController.cs" />
-    <Compile Include="Assets\Scripts\Miner.cs" />
-    <Compile Include="Assets\Scripts\MineShaft.cs" />
-    <Compile Include="Assets\Scripts\MineShaftModel.cs" />
-    <Compile Include="Assets\Scripts\MineShaftView.cs" />
-    <Compile Include="Assets\Scripts\PipelineController.cs" />
-    <Compile Include="Assets\Scripts\ProgressionModelCloud.cs" />
-    <Compile Include="Assets\Scripts\ProgressionModelMineShaft.cs" />
-    <Compile Include="Assets\Scripts\Repo.cs" />
     <Compile Include="Assets\Scripts\SaveGame.cs" />
-    <Compile Include="Assets\Scripts\StructureView.cs" />
-    <Compile Include="Assets\Scripts\UpgradeMenuHandler.cs" />
+    <Compile Include="Assets\Scripts\Structures\Cloud\CloudController.cs" />
+    <Compile Include="Assets\Scripts\Structures\Cloud\ProgressionModelCloud.cs" />
+    <Compile Include="Assets\Scripts\Structures\DataConectionController.cs" />
+    <Compile Include="Assets\Scripts\Structures\Manager\ManagerController.cs" />
+    <Compile Include="Assets\Scripts\Structures\Mine Shaft\Miner.cs" />
+    <Compile Include="Assets\Scripts\Structures\Mine Shaft\MineShaft.cs" />
+    <Compile Include="Assets\Scripts\Structures\Mine Shaft\MineShaftModel.cs" />
+    <Compile Include="Assets\Scripts\Structures\Mine Shaft\ProgressionModelMineShaft.cs" />
+    <Compile Include="Assets\Scripts\Structures\Pipeline\PipelineController.cs" />
+    <Compile Include="Assets\Scripts\Structures\Repo.cs" />
+    <Compile Include="Assets\Scripts\Structures\StructureView.cs" />
+    <Compile Include="Assets\Scripts\Third Party\CameraController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />

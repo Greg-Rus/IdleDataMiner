@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum CloudState { Idle, Downloading, Connecting, Saving}
 
@@ -93,7 +94,7 @@ public class CloudController : MonoBehaviour {
             {
                 myFSM.SetState(CloudState.Saving);
             }
-            else    //Not the lowst repo, so pick the next one
+            else    //Not the lowest repo, so pick the next one
             {
                 myFSM.SetState(CloudState.Connecting);              
             }
@@ -177,12 +178,12 @@ public class CloudController : MonoBehaviour {
             myView.UpdateRepoLoad(myRepo.currentLoad);
         }
     }
-    public void GenerateUnitsForIdleTime(float seconds)
+    public void GenerateUnitsForIdleTime(double seconds)
     {
         double totalIdleProduction = 0d;
         for (int i = 0; i < consumptionRepos.Count; i++) //Simplified calculation.
         {
-            totalIdleProduction += consumptionRepos[i].Withdraw(myModel.GetProductionPerSecond() / consumptionRepos.Count * seconds);
+            totalIdleProduction += consumptionRepos[i].Withdraw(Math.Round(myModel.GetProductionPerSecond() / consumptionRepos.Count * seconds));
         }
         Debug.Log("Units: " + totalIdleProduction + " " + seconds);
         productionRepo.Deposit(totalIdleProduction);

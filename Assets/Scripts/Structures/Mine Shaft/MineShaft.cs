@@ -6,14 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(ProgressionModelMineShaft))]
 [RequireComponent(typeof(StructureView))]
 public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
-    public Repo myConsumptionRepo;
-    public Repo myRepo;
-    public Miner[] myWorkers; //TODO list
-    //public Repo[] workerRepos;
+    public Repo myConsumptionRepo;      //Separate GameObject with a tranform used for visual effects. Set in inspector.
+    public Repo myRepo;                 //Separate GameObject with a tranform used for visual effects. Set in inspector.
+    public Miner[] myWorkers;           //Separate GameObject with a tranform used for visual effects. Set in inspector.
     private int lastActiveWorkerIndex = 0;
     private ProgressionModelMineShaft myModel;
     private StructureView myView;
-	// Use this for initialization
+
 	void Awake () {
         myModel = GetComponent<ProgressionModelMineShaft>();
         myView = GetComponent<StructureView>();
@@ -23,6 +22,7 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         RestoreState();
     }
 
+    //Generator strucutre. Has infinite resources mined over time.
     private void ConfigureRepos()
     {
         myConsumptionRepo.maxCapacity = Mathf.Infinity;
@@ -40,22 +40,21 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         }
     }
 
-//  Upgrade Mechanic methods
+    //Structure upgrade mechanic
     public void OnUpgrade()
     {
         UpgradeToLevel(myModel.currentLevel + 1);
     }
-
     private void UpgradeToLevel(int newLevel)
     {
         myModel.ScaleToLevel(newLevel);
         if (ActiveWorkerCount() < myModel.currentNumberOfWorkers) ActivateNewWorker();
-        UpdateWorkers();
+        UpgradesWorkers();
         myView.UpdateLevel(myModel.currentLevel);
     }
-    public void GenerateUnitsForIdleTime(float seconds)
+
+    public void GenerateUnitsForIdleTime(double seconds)
     {
-        Debug.Log("Idle profit for: " + gameObject.name + " " + myModel.GetProductionPerSecond() * seconds);
         Deposit(myModel.GetProductionPerSecond() * seconds);
     }
 
@@ -64,11 +63,14 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         lastActiveWorkerIndex++;
         myWorkers[lastActiveWorkerIndex].gameObject.SetActive(true);
     }
+
     private int ActiveWorkerCount()
     {
         return lastActiveWorkerIndex + 1;
     }
-    private void UpdateWorkers()
+
+    //Propagates upgraded state to workers: bigger repo capacity
+    private void UpgradesWorkers()
     {
         for (int i = 0; i < myWorkers.Length; i++)
         {
@@ -102,17 +104,20 @@ public class MineShaft : MonoBehaviour, IWithdrawing , IDepositing{
         return myRepo.IsEmpty();
     }
 
+    //Upgrade the structure to the saved level. Restore repo load.
     private void RestoreState()
     {
-        if (GameSaver.instance.saveStateExists)
+        if (GameSaver.instance.saveStateExists && GameSaver.instance.CheckIfSaveExists(gameObject.name))
         {
             int oldLevel = GameSaver.instance.RestoreInt(gameObject.name + "level");
             UpgradeToLevel(oldLevel);
             Deposit(GameSaver.instance.RestoreDouble(gameObject.name + "repo"));
         }
     }
+
     private void SaveState()
     {
+        GameSaver.instance.RegisterSave(gameObject.name);
         GameSaver.instance.StoreInt(gameObject.name + "level", myModel.currentLevel);
         GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
     }

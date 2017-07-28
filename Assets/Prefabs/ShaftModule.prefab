@@ -494,7 +494,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 0
 --- !u!114 &114181863428490712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -785,13 +785,13 @@ MonoBehaviour:
   maxLevel: 100
   depth: 1
   baseUnitsMinedPerCycle: 10
-  currentUnitsMinedPerCycle: 10
+  currentUnitsMinedPerCycle: 0
   baseUnitsUploadedPerCycle: 50
-  currentUnitsUploadedPerCycle: 50
+  currentUnitsUploadedPerCycle: 0
   baseConsumptionCycleTime: 1
   baseProductionCycleTime: 1
   baseWorkerRepoMaxCapacity: 35
-  currentWorkerRepoMaxCapacity: 35
+  currentWorkerRepoMaxCapacity: 0
   currentNumberOfWorkers: 1
   maxnumberOfWorkers: 3
   consumptionCycleTime: 1

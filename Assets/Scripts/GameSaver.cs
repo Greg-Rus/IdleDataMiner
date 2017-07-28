@@ -5,6 +5,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using System;
 
+//Simple save mechanism. Mimics Player Prefs but allows the storage of doubles.
+//Reads a save file on Awake. Owerwrites it OnDestroy.
+//Game components may reach out to it through Gamesaver.instance to save a key-value pair.
+
 public class GameSaver : MonoBehaviour {
     public static GameSaver instance;
     private SaveGame saveState;
@@ -25,6 +29,18 @@ public class GameSaver : MonoBehaviour {
     public DateTime GetTimeSinceLastGame()
     {
         return saveState.saveTime;
+    }
+
+    public void RegisterSave(string componentName)
+    {
+        if (!saveState.savedComponents.Contains(componentName))
+        {
+            saveState.savedComponents.Add(componentName);
+        }
+    }
+    public bool CheckIfSaveExists(string componentName)
+    {
+        return saveState.savedComponents.Contains(componentName);
     }
 
     public void StoreDouble(string name, double value)
