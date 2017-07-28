@@ -19,13 +19,13 @@ public class PipelineController : MonoBehaviour {
     //Connect repos to form a pipeline.
     private void SetupPipeline()
     {
-        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex]);
-        cloud.productionRepo = manager;
+        cloud.consumptionRepos.Add(mineShafts[lastActiveShaftIndex]); //through IWithdrawing
+        cloud.productionRepo = manager; //through IDepositing
     }
 
     private void RestoreState()
     {
-        if (GameSaver.instance.saveStateExists)
+        if (GameSaver.instance.saveStateExists && GameSaver.instance.CheckIfSaveExists(gameObject.name))
         {
             while (GameSaver.instance.RestoreInt("lastActiveShaftIndex") != lastActiveShaftIndex)
             {
@@ -37,6 +37,7 @@ public class PipelineController : MonoBehaviour {
 
     private void SaveState()
     {
+        GameSaver.instance.RegisterSave(gameObject.name);
         GameSaver.instance.StoreInt("lastActiveShaftIndex", lastActiveShaftIndex);
     }
 
@@ -66,16 +67,16 @@ public class PipelineController : MonoBehaviour {
     private void UpdateIdleProfits()
     {
         TimeSpan timeSinceLastGame = DateTime.Now - GameSaver.instance.GetTimeSinceLastGame();
-        //timeSinceLastGame = TimeSpan.FromSeconds(Math.Round(timeSinceLastGame.TotalSeconds));
         double secondsSinceLastGame = Math.Round(timeSinceLastGame.TotalSeconds);
         if (secondsSinceLastGame > 1)
         {
-            for (int i = 0; i <= lastActiveShaftIndex; i++)
+            for (int i = 0; i <= lastActiveShaftIndex; i++)                     //Tell shafts to update idle production
             {
                 mineShafts[i].GenerateUnitsForIdleTime(secondsSinceLastGame);
             }
+            cloud.GenerateUnitsForIdleTime(secondsSinceLastGame);               //Tell could to update idle production
         }
-        cloud.GenerateUnitsForIdleTime(secondsSinceLastGame);
+        
     }
 
     private void OnApplicationQuit()

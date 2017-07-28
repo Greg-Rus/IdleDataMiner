@@ -6,35 +6,17 @@ public enum WorkerState { Idle, Consuming, Working, Producing};
 
 [RequireComponent(typeof(DataConectionController))]
 public class Miner : MonoBehaviour {
-    //public Repo myConsumptionRepo;
-    //public Repo myProductionRepo;
     public Repo myRepo;
     public IMinerModel myModel;
-    //public IRepoUseage shaftRepos;
     public IDepositing myProductionRepo;
     public IWithdrawing myConsumptionRepo;
     public DataConectionController myDataStream;
 
-    //public Transform consumptionTarget;
-    //public Transform productionTarget;
-
-    //public LineRenderer myLineRenderer;
-    //public float minWidth = 0.2f;
-    //public float maxWidth = 0.5f;
-
-    //public double unitsMinedPerSecond = 10d;
-    //public double unitsUploadedPerSecond = 50d;
-    //public float consumptionTime = 1f;
-    //public float productionTime = 1f;
-    public WorkerState state;
-
     private float timer = 0f;
-    // Use this for initialization
 
     FSM<WorkerState> myFSM;
 	void Start ()
     {
-        state = WorkerState.Idle;
         myDataStream = GetComponent<DataConectionController>();
 
         myFSM = new FSM<WorkerState>();
@@ -58,7 +40,7 @@ public class Miner : MonoBehaviour {
     {
         timer = myModel.GetConsumptionCycletime();
         double unitsWithdrawn = myConsumptionRepo.Withdraw(myModel.GetUnitsMinedPerSecond());
-        double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
+        myRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(myConsumptionRepo.GetPosition(), DataFlow.Download);
     }
     private void UpdateConsuming()
@@ -69,13 +51,13 @@ public class Miner : MonoBehaviour {
         }
         else
         {
-            if (myRepo.IsFull())
+            if (myRepo.IsFull())                        //Personal repo full. Produce units to destination repo.
             {
                 myFSM.SetState(WorkerState.Producing);
             }
             else
             {
-                myFSM.SetState(WorkerState.Consuming);
+                myFSM.SetState(WorkerState.Consuming);  //Personal repo not yet full. Keep mining.
             }
         }
     }
@@ -84,7 +66,7 @@ public class Miner : MonoBehaviour {
     {
         timer = myModel.GetProductionCycletime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsUploadedPerSecond());
-        double unitsDeposited = myProductionRepo.Deposit(unitsWithdrawn);
+        myProductionRepo.Deposit(unitsWithdrawn);
         myDataStream.SetupDataConection(myProductionRepo.GetPosition(), DataFlow.Upload);
     }
     private void UpdateProducing()
@@ -95,13 +77,13 @@ public class Miner : MonoBehaviour {
         }
         else
         {
-            if (myRepo.IsEmpty())
+            if (myRepo.IsEmpty())                       //Personal repo emtied to destination repo. Restart mining.
             {
                 myFSM.SetState(WorkerState.Consuming);
             }
             else
             {
-                myFSM.SetState(WorkerState.Producing);
+                myFSM.SetState(WorkerState.Producing);  //Personal repo not yet empty. Keep producing.
             }
         }
     }

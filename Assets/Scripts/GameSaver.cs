@@ -107,7 +107,7 @@ public class GameSaver : MonoBehaviour {
         Debug.LogError("Atribut with name: " + name + "not found in save file! Returning '0'");
     }
 
-    public void LoadGameState()
+    public void LoadGameState()  //Third party code.
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
@@ -130,7 +130,7 @@ public class GameSaver : MonoBehaviour {
         SaveGameState();
     }
 
-    public void SaveGameState()
+    public void SaveGameState()  //Third party code
     {
         saveState.saveTime = DateTime.Now;
         BinaryFormatter bf = new BinaryFormatter();

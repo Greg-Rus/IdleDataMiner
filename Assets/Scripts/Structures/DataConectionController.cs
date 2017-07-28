@@ -11,7 +11,7 @@ public class DataConectionController : MonoBehaviour {
     public float maxWidth = 0.5f;
     public Color downloadColor;
     public Color uploadColor;
-    // Use this for initialization
+
     void Awake ()
     {
         myLineRenderer = GetComponent<LineRenderer>();

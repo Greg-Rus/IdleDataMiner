@@ -36,9 +36,10 @@ public class ManagerController : MonoBehaviour , IDepositing{
         return myRepo.IsFull();
     }
 
+    //Restore repo load.
     private void RestoreState()
     {
-        if (GameSaver.instance.saveStateExists)
+        if (GameSaver.instance.saveStateExists && GameSaver.instance.CheckIfSaveExists(gameObject.name))
         {
             myRepo.Deposit(GameSaver.instance.RestoreDouble(gameObject.name + "repo"));
             myView.UpdateRepoLoad(myRepo.currentLoad);
@@ -46,6 +47,7 @@ public class ManagerController : MonoBehaviour , IDepositing{
     }
     private void SaveState()
     {
+        GameSaver.instance.RegisterSave(gameObject.name);
         GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
     }
 

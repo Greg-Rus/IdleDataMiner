@@ -10,9 +10,6 @@ public enum CloudState { Idle, Downloading, Connecting, Saving}
 [RequireComponent(typeof(ProgressionModelCloud))]
 [RequireComponent(typeof(StructureView))]
 public class CloudController : MonoBehaviour {
-    //Debug
-    public CloudState state;
-
     private Repo myRepo;
     public List<IWithdrawing> consumptionRepos;
     public IDepositing productionRepo;
@@ -24,7 +21,6 @@ public class CloudController : MonoBehaviour {
     private float timer = 0f;
 
     private FSM<CloudState> myFSM;
-    // Use this for initialization
     void Awake()
     {
         consumptionRepos = new List<IWithdrawing>();
@@ -55,7 +51,6 @@ public class CloudController : MonoBehaviour {
     void Update()
     {
         myFSM.UpdateFSM();
-        state = myFSM.currentState;
     }
 
     private void TransitionToConnecting()
@@ -69,7 +64,7 @@ public class CloudController : MonoBehaviour {
     {
         timer = myModel.GetDownloadTime();
         double unitsWithdrawn = consumptionRepos[currentRepoIndex].Withdraw(myModel.GetUnitsDownloadedPerCycle());
-        double unitsDeposited = myRepo.Deposit(unitsWithdrawn);
+        myRepo.Deposit(unitsWithdrawn);
         myView.UpdateRepoLoad(myRepo.currentLoad);
         myDataStream.SetupDataConection(consumptionRepos[currentRepoIndex].GetPosition(), DataFlow.Download);
     }
@@ -113,7 +108,7 @@ public class CloudController : MonoBehaviour {
     {
         timer = myModel.GetSaveTime();
         double unitsWithdrawn = myRepo.Withdraw(myModel.GetUnitsSavedPerCycle());
-        double unitsDeposited = productionRepo.Deposit(unitsWithdrawn);
+        productionRepo.Deposit(unitsWithdrawn);
         myView.UpdateRepoLoad(myRepo.currentLoad);
         myDataStream.SetupDataConection(productionRepo.GetPosition(), DataFlow.Upload);
         
@@ -147,7 +142,6 @@ public class CloudController : MonoBehaviour {
             currentRepoIndex = 0;
             myFSM.SetState(CloudState.Saving);
         }
-            
     }
 
     private bool IsStateTimerElapsed()
@@ -168,9 +162,10 @@ public class CloudController : MonoBehaviour {
         myView.UpdateLevel(myModel.currentLevel);
     }
 
+    //Upgrade the structure to the saved level. Restore repo load.
     private void RestoreState()
     {
-        if (GameSaver.instance.saveStateExists)
+        if (GameSaver.instance.saveStateExists && GameSaver.instance.CheckIfSaveExists(gameObject.name))
         {
             int oldLevel = GameSaver.instance.RestoreInt(gameObject.name + "level");
             UpgradeToLevel(oldLevel);
@@ -185,11 +180,11 @@ public class CloudController : MonoBehaviour {
         {
             totalIdleProduction += consumptionRepos[i].Withdraw(Math.Round(myModel.GetProductionPerSecond() / consumptionRepos.Count * seconds));
         }
-        Debug.Log("Units: " + totalIdleProduction + " " + seconds);
         productionRepo.Deposit(totalIdleProduction);
     }
     private void SaveState()
     {
+        GameSaver.instance.RegisterSave(gameObject.name);
         GameSaver.instance.StoreInt(gameObject.name + "level", myModel.currentLevel);
         GameSaver.instance.StoreDouble(gameObject.name + "repo", myRepo.currentLoad);
     }

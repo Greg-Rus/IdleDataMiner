@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressionModelCloud : MonoBehaviour, ICloudModel {
-
+public class ProgressionModelCloud : MonoBehaviour {
     public int currentLevel;
     public int maxlevel;
 
@@ -68,7 +67,6 @@ public class ProgressionModelCloud : MonoBehaviour, ICloudModel {
 
     public double GetProductionPerSecond()
     {
-        return currentUnitsSavedPerCycle / (downloadTime + saveTime);   //Simplified calculation. 
-                                                                        //Should take into account connectiond delays and bottlenecks.
+        return currentUnitsSavedPerCycle / (downloadTime + saveTime);   //Simplified calculation.                            
     }
 }

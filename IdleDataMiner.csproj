@@ -86,8 +86,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\FSM.cs" />
     <Compile Include="Assets\Scripts\GameSaver.cs" />
-    <Compile Include="Assets\Scripts\ICloudModel.cs" />
-    <Compile Include="Assets\Scripts\Interfactes.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IDepositing.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IMinerModel.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IWithdrawing.cs" />
     <Compile Include="Assets\Scripts\SaveGame.cs" />
     <Compile Include="Assets\Scripts\Structures\Cloud\CloudController.cs" />
     <Compile Include="Assets\Scripts\Structures\Cloud\ProgressionModelCloud.cs" />
